@@ -1,0 +1,60 @@
+---
+title: "Location of Boojum Burrito Bars in Ireland"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(data.table)
+library(dplyr)
+library(leaflet)
+```
+
+```{r, echo=FALSE}
+coords <- fread("coords.csv")
+```
+
+### **NOTE:** Locations are correct as of 19th September 2018
+
+## Why this Map?
+
+Many of the people of Ireland (both north and south of the border) love Mexican food. There are many food outlets that now offer a burrito bar alongside traditional offerings such as an Ulster/Irish breakfast, sandwiches and other hot foods. One such place that is popular is a chain of burrito bars called Boojum.
+ 
+## What is a Boojum?
+
+Boojum opened in 2007 as a casual Mexican food bar. They have an award winning yet simple menu. Further information can be found on their own website at <http://www.boojummex.com>. Boojum have 17 stores accross Ireland in Belfast (5), Dublin (9), Cork, Galway and Limerick.
+
+## Interactive Map of Store Locations
+
+Click on a icon to see its address.
+
+```{r, echo=FALSE}
+bjicon <- makeIcon(iconUrl = "https://pbs.twimg.com/profile_images/1026414504983371776/kSOIQ-vX_400x400.jpg",
+                  iconWidth = 30,
+                  iconHeight = 30
+                  )
+
+map2 <- leaflet() %>%
+     addTiles() %>%
+     addMarkers(.,
+                lat = coords$lat,
+                lng = coords$long,
+                clusterOptions = markerClusterOptions(),
+                icon = bjicon,
+                popup = coords$location
+                )
+
+map2
+```
+
+## Location List
+
+```{r, echo=FALSE}
+colnames(coords) <- c("City","Address","Latitude","Longitude")
+coords %>% arrange(., City, desc(Latitude), Longitude) %>% kable()
+```
+
+## Disclaimer
+
+**This website is for a project about building an interactive map using the leaflet package from R. The author has no connection with Boojum, the spread and number of the locations just make a good practice project. Other burrito outlets in Ireland (i.e. Northern Ireland and the Republic of Ireland) are availible.**
